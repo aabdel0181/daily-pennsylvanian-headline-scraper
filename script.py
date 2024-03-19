@@ -15,7 +15,7 @@ import loguru
 
 def scrape_data_point():
     """
-    Scrapes the main headline from The Daily Pennsylvanian home page.
+    Scrapes the most read headline from The Daily Pennsylvanian home page.
 
     Returns:
         str: The headline text if found, otherwise an empty string.
