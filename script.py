@@ -26,14 +26,16 @@ def scrape_data_point():
 
     if req.ok:
         soup = bs4.BeautifulSoup(req.text, "html.parser")
-        # First, find the span with id "mostRead"
         most_read_span = soup.find("span", id="mostRead")
         data_point = ""
         if most_read_span:
-            # Now, find the target anchor tag within this span
-            target_element = most_read_span.find("a", class_="frontpage-link standard-link")
-            data_point = "" if target_element is None else target_element.text
-        loguru.logger.info(f"Most Read Article: {data_point}")
+            # Iterate over each 'div' with class 'most-read-item' within 'mostRead'
+            for div in most_read_span.find_all("div", class_="most-read-item"):
+                target_element = div.find("a", class_="frontpage-link standard-link")
+                if target_element:
+                    data_point = target_element.text
+                    break  # Assuming you only want the first matching element
+        loguru.logger.info(f"Data point: {data_point}")
         return data_point
 
 
