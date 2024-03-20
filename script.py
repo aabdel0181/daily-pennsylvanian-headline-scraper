@@ -1,6 +1,6 @@
 """
-Scrapes a headline from The Daily Pennsylvanian website and saves it to a 
-JSON file that tracks headlines over time.
+Scrapes a headline from The Daily Pennsylvanian opinion website and saves it to a 
+JSON file that tracks opinion headlines over time.
 """
 
 import os
@@ -15,26 +15,26 @@ import loguru
 
 def scrape_data_point():
     """
-    Scrapes the most read headline from The Daily Pennsylvanian home page.
+    Scrapes the most read headline from The Daily Pennsylvanian Opinion page.
 
     Returns:
         str: The headline text if found, otherwise an empty string.
     """
-    req = requests.get("https://www.thedp.com")
+    req = requests.get("https://www.thedp.com/section/opinion")
     loguru.logger.info(f"Request URL: {req.url}")
     loguru.logger.info(f"Request status code: {req.status_code}")
 
     if req.ok:
         soup = bs4.BeautifulSoup(req.text, "html.parser")
-        most_read_span = soup.find("span", id="mostRead")
+        h3_elements = soup.find_all("h3", class_="standard-link")
+        print(h3_elements)
         data_point = ""
-        if most_read_span:
-            # Iterate over each 'div' with class 'most-read-item' within 'mostRead'
-            for div in most_read_span.find_all("div", class_="most-read-item"):
-                target_element = div.find("a", class_="frontpage-link standard-link")
-                if target_element:
-                    data_point = target_element.text
-                    break  # Assuming you only want the first matching element
+        # Since h3_elements is a list of elements, iterate through it
+        for h3 in h3_elements:
+            target_element = h3.find('a')  # Find <a> tag within each <h3>
+            if target_element:
+                data_point = target_element.text
+                break  # Assuming you only want the first matching element
         loguru.logger.info(f"Data point: {data_point}")
         return data_point
 
