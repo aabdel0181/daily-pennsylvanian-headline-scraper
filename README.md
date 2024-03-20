@@ -1,14 +1,24 @@
-# Basic Git Scraper Template
+# My Changes
 
-This template provides a starting point for **git scraping**—the technique of scraping data from websites and automatically committing it to a Git repository using workflows, [coined by Simon Willison](https://simonwillison.net/2020/Oct/9/git-scraping/).
+The new code has been modified to scrape the most read headline from The Daily Pennsylvanian's "Opinion" sub-page instead of the main headline from the home page. Here are the key changes:
 
-Git scraping helps create an audit trail capturing snapshots of data over time. It leverages Git's version control and a continuous integration's scheduling capabilities to regularly scrape sites and save data without needing to manage servers.
+## 1. URL Change
 
-The key benefit is automating web scrapers to run on a schedule with little overhead. The scraped data gets stored incrementally so you can review historical changes. This helps enable use-cases like price monitoring, content updates tracking, research datasets building, and more. The ability to have these resources for virtually free, enables the use of this technique for a wide range of projects.
+- The URL has been changed to `"https://www.thedp.com/section/opinion"` to target the "Opinion" sub-page.
 
-Tools like GitHub Actions, GitLab CI and others make git scraping adaptable to diverse sites and data needs. The scraping logic just needs to output data serialized formats like CSV, JSON etc which gets committed back to git. This makes the data easily consumable downstream for analysis and vis.
+## 2. Target Element Selector
 
-This template includes a sample workflow to demonstrate the core git scraping capabilities. Read on to learn how to customize it!
+- Instead of directly looking for an anchor (`<a>`) tag with a specific class, the new code searches for all `<h3>` elements with the class `"standard-link"`, assuming that the most read headlines on the "Opinion" sub-page are likely wrapped in these elements.
+
+## 3. Iterating Over Multiple Elements
+
+- The new code iterates over the list of `<h3>` elements obtained from `soup.find_all()`. For each `<h3>` element, it looks for an anchor (`<a>`) tag within that element using `h3.find('a')`.
+- If an anchor tag is found, it assumes that the text content of that anchor tag is the desired headline and assigns it to the `data_point` variable.
+- The `break` statement ensures that the loop stops after finding the first matching element, assuming that only the most read headline is required.
+
+The rationale behind these changes is to adapt the code to scrape the specific content and structure of the "Opinion" sub-page, as the layout and HTML structure of the sub-page is different from the home page.
+
+By iterating over the `<h3>` elements with the class `"standard-link"`, the new code attempts to find the most read headline, which is wrapped in an anchor (`<a>`) tag within the first `<h3>` elements.
 
 ## Overview
 
